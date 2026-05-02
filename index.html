@@ -1316,7 +1316,9 @@ openInviteBtn.addEventListener('click', () => {
   mainInvite.classList.add('visible');
   window.scrollTo({ top: 0 });
   setTimeout(() => { landingPage.style.display = 'none'; }, 900);
-  if (typeof startBgMusic === 'function') startBgMusic();
+  const music = document.getElementById("bgMusic");
+music.volume = 0.6;
+music.play().catch(err => console.log(err));
 });
 
 // ── Countdown ────────────────────────────────────
