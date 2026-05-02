@@ -1465,17 +1465,17 @@ document.getElementById('sendWishBtn').addEventListener('click', async () => {
 
 
 <!-- Background Music -->
-<audio id="bgMusic">
-  <source src="Wedding.mp3 type="audio/mpeg">
+<audio id="bgMusic" loop preload="auto">
+  <source src="Wedding.mp3" type="audio/mpeg">
 </audio>
 
-<button id="musicToggle" title="Toggle Music" style="position:fixed;bottom:24px;right:20px;z-index:9999;width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,0.4);background:transparent;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 10px rgba(0,0,0,0.15);cursor:pointer;display:none;align-items:center;justify-content:center;padding:0;-webkit-appearance:none;appearance:none;outline:none;">
-<svg id="musicIconOn" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+<button id="musicToggle" title="Toggle Music" style="position:fixed;bottom:24px;right:20px;z-index:9999;width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,0.4);background:transparent;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 10px rgba(0,0,0,0.15);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;-webkit-appearance:none;appearance:none;outline:none;">
+<svg id="musicIconOn" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;">
   <path d="M9 18V6l12-3v12" stroke="#b8860b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   <circle cx="6" cy="18" r="3" stroke="#b8860b" stroke-width="2"/>
   <circle cx="18" cy="15" r="3" stroke="#b8860b" stroke-width="2"/>
 </svg>
-<svg id="musicIconOff" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+<svg id="musicIconOff" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
   <path d="M9 18V6l12-3v12" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
   <circle cx="6" cy="18" r="3" stroke="#999" stroke-width="2"/>
   <circle cx="18" cy="15" r="3" stroke="#999" stroke-width="2"/>
@@ -1487,43 +1487,29 @@ document.getElementById('sendWishBtn').addEventListener('click', async () => {
 (function() {
   var music = document.getElementById("bgMusic");
   var btn = document.getElementById("musicToggle");
-  var playing = false;
-
-  var iconOn  = document.getElementById("musicIconOn");
+  var iconOn = document.getElementById("musicIconOn");
   var iconOff = document.getElementById("musicIconOff");
+
+  music.volume = 0.6;
+
+  function showOn() {
+    iconOn.style.display = "block";
+    iconOff.style.display = "none";
+  }
+
+  function showOff() {
+    iconOn.style.display = "none";
+    iconOff.style.display = "block";
+  }
+
   btn.addEventListener("click", function () {
     if (music.paused) {
-        music.play().then(() => {
-            iconOn.style.display = "block";
-            iconOff.style.display = "none";
-        }).catch(err => console.log(err));
+      music.play().then(showOn).catch(function(error) {
+        console.log("Music play failed:", error);
+      });
     } else {
-        music.pause();
-        iconOn.style.display = "none";
-        iconOff.style.display = "block";
-    }
-});
-  function showOn()  { iconOn.style.display="block"; iconOff.style.display="none"; }
-  function showOff() { iconOn.style.display="none";  iconOff.style.display="block"; }
-
-  window.startBgMusic = function() {
-    music.volume = 0.6;
-    music.play().then(function() {
-      playing = true;
-      btn.style.display = "flex";
-      showOn();
-    }).catch(function() {});
-  };
-
-  btn.addEventListener("click", function() {
-    if (playing) {
       music.pause();
-      playing = false;
       showOff();
-    } else {
-      music.play();
-      playing = true;
-      showOn();
     }
   });
 })();
